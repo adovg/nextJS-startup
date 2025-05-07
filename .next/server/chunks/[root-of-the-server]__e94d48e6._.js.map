@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
-    {"offset": {"line": 76, "column": 0}, "map": {"version":3,"sources":["file:///home/roanok/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/projects/nextJS-startup/auth.ts"],"sourcesContent":["import NextAuth from \"next-auth\";\nimport GitHub from \"next-auth/providers/github\";\n\nexport const { handlers, signIn, signOut, auth } = NextAuth({\n  providers: [GitHub],\n});\n"],"names":[],"mappings":";;;;;;AAAA;AAAA;AACA;AAAA;;;AAEO,MAAM,EAAE,QAAQ,EAAE,MAAM,EAAE,OAAO,EAAE,IAAI,EAAE,GAAG,CAAA,GAAA,uJAAA,CAAA,UAAQ,AAAD,EAAE;IAC1D,WAAW;QAAC,uJAAA,CAAA,UAAM;KAAC;AACrB","debugId":null}},
-    {"offset": {"line": 99, "column": 0}, "map": {"version":3,"sources":["file:///home/roanok/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/projects/nextJS-startup/app/api/auth/%5B...nextauth%5D/route.ts"],"sourcesContent":["import { handlers } from \"@/auth\"; // Referring to the auth.ts we just created\nexport const { GET, POST } = handlers;\n"],"names":[],"mappings":";;;;AAAA,oLAAmC,2CAA2C;;AACvE,MAAM,EAAE,GAAG,EAAE,IAAI,EAAE,GAAG,sGAAA,CAAA,WAAQ","debugId":null}}]
-}
