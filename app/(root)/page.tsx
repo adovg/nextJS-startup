@@ -1,4 +1,4 @@
-import SearchForm from "../Components/SearchForm";
+import SearchForm from "../../components/SearchForm";
 
 export default async function Home({
   searchParams,
@@ -18,6 +18,7 @@ export default async function Home({
         </p>
         <SearchForm query={query} />
       </section>
+      <section className="section_container"></section>
     </>
   );
 }
