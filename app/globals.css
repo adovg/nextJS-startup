@@ -94,6 +94,58 @@ body {
   .section_container {
     @apply px-6 py-10 max-w-7xl mx-auto;
   }
+
+  .card_grid {
+    @apply grid md:grid-cols-3 sm:grid-cols-2 gap-5;
+  }
+
+  .card_grid-sm {
+    @apply grid sm:grid-cols-2 gap-5;
+  }
+
+  .text-30-extrabold {
+    @apply text-[30px] font-extrabold text-white;
+  }
+
+  .text-30-bold {
+    @apply text-[30px] font-bold text-black;
+  }
+  .text-30-semibold {
+    @apply font-semibold text-[30px] text-black;
+  }
+  .text-26-semibold {
+    @apply font-semibold text-[26px] text-black;
+  }
+
+  .text-24-black {
+    @apply text-[24px] font-black text-black;
+  }
+
+  .text-20-medium {
+    @apply font-medium text-[20px] text-black;
+  }
+
+  .text-16-medium {
+    @apply font-medium text-[16px] text-black;
+  }
+
+  .text-14-normal {
+    @apply font-normal text-sm text-white;
+  }
+
+  .startup-card {
+    @apply bg-white border-[5px] border-black py-6 px-5 rounded-[22px]  hover:border-primary transition-all duration-500  hover:bg-primary;
+  }
+  .startup-card_date {
+    @apply font-medium text-[16px] bg-primary px-4 py-2 rounded-full;
+  }
+  .startup-card_desc {
+    @apply font-normal text-[16px] line-clamp-2 my-3 text-black break-all;
+  }
+
+  .startup-card_img {
+    @apply w-full h-[164px] rounded-[10px] object-cover;
+  }
 }
 
 @theme inline {
