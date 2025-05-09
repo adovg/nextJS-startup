@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { workSans } from "./fonts";
 import "./globals.css";
+// import "easymde/dist/easymde.min.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
