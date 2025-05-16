@@ -19,6 +19,7 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
     _id,
     description,
   } = post;
+  console.log(_id);
   return (
     <li className="startup-card group">
       <div className="flex-between">
@@ -57,7 +58,7 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
           <p className="text-16-medium">{category}</p>
         </Link>
         <Button className="startup-card_btn" asChild>
-          <Link href={`/startup${_id}`}>Details</Link>
+          <Link href={`/startup/${_id}`}>Details</Link>
         </Button>
       </div>
     </li>
