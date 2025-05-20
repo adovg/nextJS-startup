@@ -146,6 +146,14 @@ body {
   .startup-card_img {
     @apply w-full h-[164px] rounded-[10px] object-cover;
   }
+
+  .tag {
+    @apply bg-secondary px-6 py-3  font-bold rounded-sm uppercase relative before:content-[''] before:absolute before:top-2 before:left-2 before:border-t-[10px] before:border-t-black before:border-r-[10px] before:border-r-transparent after:content-[''] after:absolute after:bottom-2 after:right-2 after:border-b-[10px] after:border-b-black after:border-l-[10px] after:border-l-transparent;
+  }
+
+  .view_skeleton {
+    @apply bg-zinc-400 h-10 w-24 rounded-lg fixed bottom-3 right-3;
+  }
 }
 
 @theme inline {

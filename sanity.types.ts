@@ -143,6 +143,7 @@ export type Startup = {
   category?: string;
   image?: string;
   pitch?: string;
+  description?: string;
 };
 
 export type Slug = {

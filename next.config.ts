@@ -1,14 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-module.exports = {
   images: {
     dangerouslyAllowSVG: true,
-    remotePatterns: [new URL("https://placehold.co/600x400")],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+      },
+      {
+        protocol: "https",
+        hostname: "media.istockphoto.com",
+      },
+    ],
   },
 };
 
 export default nextConfig;
+
+// "https://placehold.co/600x400", "media.istockphoto.com";
