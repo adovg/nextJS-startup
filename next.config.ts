@@ -12,10 +12,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "media.istockphoto.com",
       },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+      },
     ],
   },
 };
 
 export default nextConfig;
-
-// "https://placehold.co/600x400", "media.istockphoto.com";
