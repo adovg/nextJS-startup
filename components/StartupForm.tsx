@@ -7,16 +7,23 @@ import { Button } from "./ui/button";
 import { Send } from "lucide-react";
 import { formSchema } from "@/lib/validation";
 import z from "zod";
-// import { useToast } from "button@/components/ui/sonner"
 import { toast } from "sonner";
+//import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { createPitch } from "@/lib/actions";
 
 const StartupForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pitch, setPitch] = useState("");
-  //const {toast} = useToast();
+  // const { toast } = useToast();
   const router = useRouter();
+
+  // const toastId = toast.loading("Загрузка...");
+
+  // // Позже можно обновить
+  // setTimeout(() => {
+  //   toast.success("Готово!", { id: toastId });
+  // }, 2000);
 
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
     console.log("Form submitted!", formData); //
@@ -34,10 +41,7 @@ const StartupForm = () => {
       //console.log(formValues);
 
       if (result.status == "SUCCESS") {
-        toast({
-          title: "Success",
-          description: "Your startup pitch has been created succesfully",
-        });
+        toast.success("Your startup pitch has been created succesfully");
         router.push(`/startup/${result._id}`);
       }
       return result;
@@ -46,21 +50,12 @@ const StartupForm = () => {
         const fieldErrors = error.flatten().fieldErrors;
 
         setErrors(fieldErrors as unknown as Record<string, string>);
-
-        toast({
-          title: "Error",
-          description: "Please check your inputs and ty again",
-          variant: "destructive",
-        });
+        toast.error("Please check your inputs and ty again");
 
         return { ...prevState, error: "Validation failed", status: "ERROR" };
       }
 
-      toast({
-        title: "Error",
-        description: "An unexpected error has occured",
-        variant: "destructive",
-      });
+      toast.error("An unexpected error has occured");
 
       return {
         ...prevState,
