@@ -5,62 +5,37 @@ import { Textarea } from "./ui/textarea";
 import MDEditor from "@uiw/react-md-editor";
 import { Button } from "./ui/button";
 import { Send } from "lucide-react";
-import { formSchema } from "@/lib/validation";
-import z from "zod";
 import { toast } from "sonner";
-//import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { createPitch } from "@/lib/actions";
+import { cn } from "@/lib/utils"; // Убедитесь, что у вас есть этот хелпер
 
 const StartupForm = () => {
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [pitch, setPitch] = useState("");
-  // const { toast } = useToast();
   const router = useRouter();
-
-  // const toastId = toast.loading("Загрузка...");
-
-  // // Позже можно обновить
-  // setTimeout(() => {
-  //   toast.success("Готово!", { id: toastId });
-  // }, 2000);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
-    console.log("Form submitted!", formData); //
     try {
-      const formValues = {
-        title: formData.get("title") as string,
-        description: formData.get("description") as string,
-        category: formData.get("category") as string,
-        link: formData.get("link") as string,
-        pitch,
-      };
-      await formSchema.parseAsync(formValues);
       const result = await createPitch(prevState, formData, pitch);
-      //console.log(result)
-      //console.log(formValues);
 
-      if (result.status == "SUCCESS") {
-        toast.success("Your startup pitch has been created succesfully");
+      if (result?.status === "SUCCESS" && result._id) {
+        toast.success("Startup pitch created successfully");
+        setIsRedirecting(true);
         router.push(`/startup/${result._id}`);
+        return { ...result, shouldRedirect: true };
       }
-      return result;
+
+      throw new Error(result?.error || "Failed to create pitch");
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors = error.flatten().fieldErrors;
-
-        setErrors(fieldErrors as unknown as Record<string, string>);
-        toast.error("Please check your inputs and ty again");
-
-        return { ...prevState, error: "Validation failed", status: "ERROR" };
-      }
-
-      toast.error("An unexpected error has occured");
-
+      toast.error(
+        error instanceof Error ? error.message : "Failed to submit form"
+      );
       return {
         ...prevState,
-        error: "An unexpected error has occured",
+        error: "Submission failed",
         status: "ERROR",
+        shouldRedirect: false,
       };
     }
   };
@@ -68,95 +43,146 @@ const StartupForm = () => {
   const [state, formAction, isPending] = useActionState(handleFormSubmit, {
     error: "",
     status: "INITIAL",
+    shouldRedirect: false,
   });
 
+  // Стили для формы
+  const formClasses =
+    "space-y-6 max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md";
+  const labelClasses = "block mb-2 text-sm font-medium text-gray-900";
+  const inputClasses =
+    "w-full p-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500";
+  const errorClasses = "mt-1 text-sm text-red-600";
+
   return (
-    <form action={formAction} className="startup-form">
+    <form
+      action={formAction}
+      className={formClasses}
+      onSubmit={(e) => {
+        if (isRedirecting) {
+          e.preventDefault();
+        }
+      }}
+    >
       <div>
-        <label htmlFor="title" className="startup-form_label">
-          Title
+        <label htmlFor="title" className={labelClasses}>
+          Title (min 3 characters)
         </label>
         <Input
           id="title"
           name="title"
-          className="startup-form_input"
           required
+          minLength={3}
+          className={inputClasses}
           placeholder="Startup Title"
-        ></Input>
-        {errors.title && <p className="startup-form_error">{errors.title}</p>}
+        />
       </div>
+
       <div>
-        <label htmlFor="description" className="startup-form_label">
-          Description
+        <label htmlFor="description" className={labelClasses}>
+          Description (min 20 characters)
         </label>
         <Textarea
           id="description"
           name="description"
-          className="startup-form_textarea"
           required
+          minLength={20}
+          className={inputClasses}
           placeholder="Startup description"
-        ></Textarea>
-        {errors.description && (
-          <p className="startup-form_error">{errors.description}</p>
-        )}
+          rows={4}
+        />
       </div>
 
       <div>
-        <label htmlFor="category" className="startup-form_label">
-          Category
+        <label htmlFor="category" className={labelClasses}>
+          Category (min 3 characters)
         </label>
         <Input
           id="category"
           name="category"
-          className="startup-form_input"
           required
-          placeholder="Startup category (Tech, Health, Education...)"
-        ></Input>
-        {errors.category && (
-          <p className="startup-form_error">{errors.category}</p>
-        )}
+          minLength={3}
+          className={inputClasses}
+          placeholder="Tech, Health, Education..."
+        />
       </div>
 
       <div>
-        <label htmlFor="link" className="startup-form_label">
+        <label htmlFor="link" className={labelClasses}>
           Image URL
         </label>
         <Input
           id="link"
           name="link"
-          className="startup-form_input"
           required
-          placeholder="Startup Image URL"
-        ></Input>
-        {errors.link && <p className="startup-form_error">{errors.link}</p>}
+          type="url"
+          className={inputClasses}
+          placeholder="https://example.com/image.jpg"
+        />
       </div>
 
-      <div data-color-mode="light">
-        <label htmlFor="pitch" className="startup-form_label">
-          Pitch
+      <div>
+        <label htmlFor="pitch" className={labelClasses}>
+          Pitch (min 10 characters)
         </label>
-        <MDEditor
-          value={pitch}
-          id="pitch"
-          preview="edit"
-          height={300}
-          style={{ borderRadius: 20, overflow: "hidden" }}
-          textareaProps={{
-            placeholder: "Describe your idea and what the problem it solves",
-          }}
-          previewOptions={{ disallowedElements: ["style"] }}
-          onChange={(value) => setPitch(value as string)}
-        />
-        {errors.pitch && <p className="startup-form_error">{errors.pitch}</p>}
+        <div className="mt-1">
+          <MDEditor
+            value={pitch}
+            onChange={setPitch}
+            height={300}
+            className="rounded-lg border border-gray-300"
+            textareaProps={{
+              id: "pitch",
+              name: "pitch",
+              placeholder: "Describe your idea and the problem it solves",
+              required: true,
+              minLength: 10,
+            }}
+          />
+        </div>
       </div>
+
       <Button
         type="submit"
-        className="startup-form_btn text-white"
-        disabled={isPending}
+        disabled={isPending || isRedirecting}
+        className={cn(
+          "w-full py-3 px-5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-lg",
+          (isPending || isRedirecting) && "opacity-75 cursor-not-allowed"
+        )}
       >
-        {isPending ? "Submitting..." : "Submit your pitch"}
-        <Send className="size-6 ml-2" />
+        {isPending || isRedirecting ? (
+          <span className="flex items-center justify-center">
+            <svg
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Processing...
+          </span>
+        ) : (
+          <>
+            Submit Pitch
+            <Send className="ml-2 h-4 w-4" />
+          </>
+        )}
       </Button>
+
+      {state.error && <p className={errorClasses}>{state.error}</p>}
     </form>
   );
 };
