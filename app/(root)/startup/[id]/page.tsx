@@ -28,7 +28,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <section className="pink-container bg-primary min-h-[230px]">
+      <section className="pink-container bg-primary min-h-[230px] flex flex-col justify-center items-center pt-10 pb-10">
         <p className="tag">{formatDate(post._createdAt)}</p>
         <h1 className="heading">{post.title}</h1>
         <p className="sub-heading !max-w-5xl">{post.description}</p>

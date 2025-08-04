@@ -5,7 +5,6 @@ import { auth, signOut, signIn } from "@/auth";
 import { redirect } from "next/dist/server/api-utils";
 import { BadgePlus, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-// import {auth, signOut, signIn } from 'next-auth/react';
 
 const Navbar = async () => {
   const session = await auth();
