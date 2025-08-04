@@ -17,7 +17,7 @@ export default async function Home({
 
   return (
     <>
-      <section className="pink-container bg-primary">
+      <section className="pink-container bg-primary flex flex-col justify-center items-center pb-10">
         <h1 className="heading">
           Pitch your startup, <br />
           connect with entrepreneurs{" "}

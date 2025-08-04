@@ -7,48 +7,66 @@ import { writeClient } from "@/sanity/lib/write-client";
 
 export const createPitch = async (
   state: any,
-  form: FormData,
-  pitch: string
+  formData: FormData,
+  pitchContent: string
 ) => {
   const session = await auth();
 
-  if (!session)
-    return parseServerActionResponse({ error: "Not sign in", staus: "ERROR" });
+  if (!session || !session.user) {
+    return parseServerActionResponse({
+      error: "Authentication required",
+      status: "ERROR",
+    });
+  }
 
-  const { title, description, category, link } = Object.fromEntries(
-    Array.from(form).filter(([key]) => key !== "pitch")
-  );
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const category = formData.get("category") as string;
+  const link = formData.get("link") as string;
 
-  const slug = slugify(title as string, { lower: true, strict: true });
+  if (!title || !description || !category || !link || !pitchContent) {
+    return parseServerActionResponse({
+      error: "All fields are required",
+      status: "ERROR",
+    });
+  }
 
   try {
+    const slug = slugify(title, {
+      lower: true,
+      strict: true,
+      trim: true,
+    });
+
     const startup = {
-      title,
-      description,
-      category,
-      image: link,
+      _type: "startup",
+      title: title.trim(),
+      description: description.trim(),
+      category: category.trim(),
+      image: link.trim(),
       slug: {
-        _type: slug,
+        _type: "slug",
         current: slug,
       },
       author: {
         _type: "reference",
-        _ref: session?.id,
+        _ref: session.user.id,
       },
-      pitch,
+      pitch: pitchContent.trim(),
     };
 
-    const result = await writeClient.create({ _type: "startup", ...startup });
+    const result = await writeClient.create(startup);
+
     return parseServerActionResponse({
-      ...result,
-      error: "",
-      staus: "SUCCESS",
+      _id: result._id,
+      error: null,
+      status: "SUCCESS",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Pitch creation error:", error);
     return parseServerActionResponse({
-      error: JSON.stringify(error),
-      staus: "ERROR",
+      error: "Failed to create pitch",
+      status: "ERROR",
     });
   }
 };
